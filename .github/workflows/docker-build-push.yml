@@ -19,7 +19,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_RENAJIN }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
       - name: Build and push Docker image
@@ -28,8 +28,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/cs6620-app:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/cs6620-app:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_RENAJIN }}/cs6620-app:latest
+            ${{ secrets.DOCKERHUB_RENAJIN }}/cs6620-app:${{ github.sha }}
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.html_url }}
             org.opencontainers.image.revision=${{ github.sha }}
