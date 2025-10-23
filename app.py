@@ -1,5 +1,5 @@
-# Version: 1.0.1
-# Built with GitHub Actions
+# Version: 2.0 - Automated Deployment
+# Built and Deployed with GitHub Actions + AWS SSM
 
 import os
 import re
@@ -7,6 +7,7 @@ import csv
 from io import StringIO
 from flask import Flask, render_template, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
+from datetime import datetime
 from pydub import AudioSegment
 import tempfile
 
@@ -91,6 +92,93 @@ def parse_log_content(log_content):
             data[filename] = []
         data[filename].append(segment)
     return data
+
+
+@app.route('/version')
+def version_info():
+    """Version and deployment information endpoint"""
+    return f'''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Version Info - CS6620 Automated Deployment</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 50px auto;
+                padding: 20px;
+                background-color: #f5f5f5;
+            }}
+            .container {{
+                background-color: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }}
+            h1 {{
+                color: #2c3e50;
+                border-bottom: 3px solid #3498db;
+                padding-bottom: 10px;
+            }}
+            .info {{
+                margin: 15px 0;
+                padding: 10px;
+                background-color: #ecf0f1;
+                border-left: 4px solid #3498db;
+            }}
+            .label {{
+                font-weight: bold;
+                color: #2c3e50;
+            }}
+            .value {{
+                color: #27ae60;
+            }}
+            .back-link {{
+                display: inline-block;
+                margin-top: 20px;
+                padding: 10px 20px;
+                background-color: #3498db;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🚀 Hello from Automated CI/CD Pipeline!</h1>
+            <div class="info">
+                <span class="label">Version:</span> 
+                <span class="value">2.0 - Automated Deployment</span>
+            </div>
+            <div class="info">
+                <span class="label">Deployed via:</span> 
+                <span class="value">GitHub Actions + AWS SSM</span>
+            </div>
+            <div class="info">
+                <span class="label">Build Date:</span> 
+                <span class="value">{datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")}</span>
+            </div>
+            <div class="info">
+                <span class="label">Assignment:</span> 
+                <span class="value">Week 7 - Automated EC2 Deployment</span>
+            </div>
+            <a href="/" class="back-link">← Back to Main App</a>
+        </div>
+    </body>
+    </html>
+    '''
+
+@app.route('/health')
+def health():
+    """Health check endpoint for monitoring"""
+    return jsonify({
+        'status': 'healthy',
+        'version': '2.0',
+        'deployment_method': 'automated',
+        'timestamp': datetime.now().isoformat()
+    })
 
 @app.route('/audio_files/<path:filename>')
 def serve_audio_file(filename):
